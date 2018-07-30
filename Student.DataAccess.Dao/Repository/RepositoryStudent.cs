@@ -42,6 +42,8 @@ namespace Student.DataAccess.Dao.Repository
 
                         _cmd.CommandType = CommandType.StoredProcedure;
                         _cmd.Parameters.Add(
+                                new SqlParameter("@Id", alumno.Id.ToString()));
+                        _cmd.Parameters.Add(
                                 new SqlParameter("@Guid", alumno.Guid.ToString()));
                         _cmd.Parameters.Add(
                                 new SqlParameter("@Nombre", alumno.Nombre.ToString()));
@@ -67,7 +69,7 @@ namespace Student.DataAccess.Dao.Repository
                         _cmd.ExecuteNonQuery();
                         _cmd.Parameters.Clear();
 
-                        _cmd.CommandText = "SELECT @@IDENTITY";
+                        //_cmd.CommandText = "SELECT @@IDENTITY";
 
                         return Convert.ToInt32(_cmd.ExecuteScalar());
                     }
@@ -100,13 +102,19 @@ namespace Student.DataAccess.Dao.Repository
                     // Importante abrir la conexion antes de lanzar ningun comando
                     _conn.Open();
 
-                    using (SqlCommand _cmd = new SqlCommand(sql, _conn))
+                    using (SqlCommand _cmd = new SqlCommand("GetAll - Alumnos", _conn))
                     {
                         using (SqlDataReader reader = _cmd.ExecuteReader())
                         {
+                            _cmd.CommandType = CommandType.StoredProcedure;
+                            //reader = cmd.ExecuteReader();
                             while (reader.Read())
                             {
-                                Alumno alumno = new Alumno(Guid.Parse(reader["guid"].ToString()), Convert.ToInt32(reader["id"]), reader["nombre"].ToString(), reader["apellidos"].ToString(), reader["dni"].ToString(), Convert.ToInt32(reader["edad"]), DateTime.Parse(reader["nacimiento"].ToString()), DateTime.Parse(reader["registro"].ToString()));
+                                Alumno alumno = new Alumno(Guid.Parse(reader["guid"].ToString()), 
+                                    Convert.ToInt32(reader["id"]), reader["nombre"].ToString(), 
+                                    reader["apellidos"].ToString(), reader["dni"].ToString(), 
+                                    Convert.ToInt32(reader["edad"]), DateTime.Parse(reader["nacimiento"].ToString()), 
+                                    DateTime.Parse(reader["registro"].ToString()));
                                 listaAlumnos.Add(alumno);
                             }
                         }

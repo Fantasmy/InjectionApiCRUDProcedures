@@ -95,14 +95,14 @@ namespace Student.DataAccess.Dao.Repository
 
             try
             {
-                var sql = "SELECT * FROM dbo.Alumnos";
+                ////var sql = "SELECT * FROM dbo.Alumnos";
 
                 using (SqlConnection _conn = new SqlConnection(connectionString))
                 {
                     // Importante abrir la conexion antes de lanzar ningun comando
                     _conn.Open();
 
-                    using (SqlCommand _cmd = new SqlCommand("GetAll - Alumnos", _conn))
+                    using (SqlCommand _cmd = new SqlCommand("getAlumnos", _conn))
                     {
                         using (SqlDataReader reader = _cmd.ExecuteReader())
                         {
